@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Techprolabz</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <img src="assets/logo.jpg" alt="Techprolabz Logo">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="#profile">Profile</a></li>
+                <li><a href="payment.html">Payment</a></li>
+                <li><a href="#" id="logout">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="robotics-overlay"></div>
+    <div class="particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <main>
+        <!-- Welcome Toast Notification -->
+        <div id="welcome-toast" class="welcome-toast">
+            Welcome to Your Dashboard, <span id="toast-user-name"></span>!
+        </div>
+
+        <div class="dashboard-container">
+            <div class="dashboard-card profile-card">
+                <h3>👤 Your Profile</h3>
+
+                <!-- Avatar Section -->
+                <div class="avatar-section">
+                    <div class="avatar-display" id="avatar-display-container">
+                        <img id="avatar-display" src="assets/image-1767696074354.png" alt="User Avatar">
+                    </div>
+                    <div class="avatar-selector hidden" id="avatar-selector">
+                        <label>Choose Avatar:</label>
+                        <div class="avatar-options">
+                            <img src="assets/image-1767696074354.png" alt="Avatar 1" class="avatar-option"
+                                onclick="selectAvatar('assets/image-1767696074354.png')">
+                            <img src="assets/image-1767696586455.png" alt="Avatar 2" class="avatar-option"
+                                onclick="selectAvatar('assets/image-1767696586455.png')">
+                            <img src="assets/image-1767696665326.png" alt="Avatar 3" class="avatar-option"
+                                onclick="selectAvatar('assets/image-1767696665326.png')">
+                            <img src="assets/image-1767696811704.png" alt="Avatar 4" class="avatar-option"
+                                onclick="selectAvatar('assets/image-1767696811704.png')">
+                            <img src="assets/image-1767696881890.png" alt="Avatar 5" class="avatar-option"
+                                onclick="selectAvatar('assets/image-1767696881890.png')">
+                            <img src="assets/image-1767697326876.png" alt="Avatar 6" class="avatar-option"
+                                onclick="selectAvatar('assets/image-1767697326876.png')">
+                            <img src="assets/image-1767697352522.png" alt="Avatar 7" class="avatar-option"
+                                onclick="selectAvatar('assets/image-1767697352522.png')">
+                            <img src="assets/image-1767697423422.png" alt="Avatar 8" class="avatar-option"
+                                onclick="selectAvatar('assets/image-1767697423422.png')">
+                            <img src="assets/image-1767697446825.png" alt="Avatar 9" class="avatar-option"
+                                onclick="selectAvatar('assets/image-1767697446825.png')">
+                            <img src="assets/image-1767697459857.png" alt="Avatar 10" class="avatar-option"
+                                onclick="selectAvatar('assets/image-1767697459857.png')">
+                            <img src="assets/image-1767697496878.png" alt="Avatar 11" class="avatar-option"
+                                onclick="selectAvatar('assets/image-1767697496878.png')">
+                        </div>
+                    </div>
+                </div>
+
+                <form id="profile-form">
+                    <div class="form-group">
+                        <label for="full-name">Full Name:</label>
+                        <input type="text" id="full-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="dob">Date of Birth:</label>
+                        <input type="date" id="dob" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="education">Education:</label>
+                        <select id="education" required>
+                            <option value="">Select</option>
+                            <option value="High School">High School</option>
+                            <option value="Bachelor's">Bachelor's Degree</option>
+                            <option value="Master's">Master's Degree</option>
+                            <option value="PhD">PhD</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="college">College/University Name:</label>
+                        <input type="text" id="college" placeholder="Enter your college name">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number:</label>
+                        <input type="tel" id="phone">
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Address:</label>
+                        <input type="text" id="address" placeholder="Enter your address">
+                    </div>
+                    <div class="form-group">
+                        <label for="city">City:</label>
+                        <input type="text" id="city" placeholder="Enter your city">
+                    </div>
+                    <button type="submit">💾 Save Profile</button>
+                </form>
+            </div>
+
+            <div class="dashboard-card quick-actions-card">
+                <h3>⚡ Quick Actions</h3>
+                <p>Manage your account and payments.</p>
+                <a href="payment.html" class="action-btn">Go to Payments</a>
+                <a href="booking.html" class="action-btn">Book Equipment</a>
+            </div>
+        </div>
+    </main>
+
+    <script src="toast.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Make navbar always visible on dashboard
+        document.addEventListener('DOMContentLoaded', function () {
+            const nav = document.querySelector('nav');
+            if (nav) {
+                nav.classList.remove('nav-collapsed');
+                // Add inline styles to ensure visibility
+                nav.style.position = 'static';
+                nav.style.maxWidth = 'none';
+                nav.style.overflow = 'visible';
+                nav.style.transform = 'none';
+            }
+        });
+
+        let selectedAvatar = 'assets/image-1767696074354.png';
+
+        const currentUser = localStorage.getItem('currentUser');
+        if (!currentUser) {
+            window.location.href = 'login.html';
+        } else {
+            // Show welcome toast
+            const toast = document.getElementById('welcome-toast');
+            const toastUserName = document.getElementById('toast-user-name');
+            toastUserName.textContent = currentUser;
+
+            // Check if this is first visit to dashboard in this session
+            const hasSeenWelcome = sessionStorage.getItem('hasSeenWelcome');
+            if (!hasSeenWelcome) {
+                toast.classList.add('show');
+                sessionStorage.setItem('hasSeenWelcome', 'true');
+
+                // Hide toast after 3 seconds
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            }
+
+            loadProfile();
+        }
+
+        // Logout
+        document.getElementById('logout').addEventListener('click', function () {
+            localStorage.removeItem('currentUser');
+            sessionStorage.removeItem('hasSeenWelcome');
+            window.location.href = 'login.html';
+        });
+
+        // Toggle avatar selector when clicking avatar display
+        document.getElementById('avatar-display-container').addEventListener('click', function () {
+            const selector = document.getElementById('avatar-selector');
+            selector.classList.toggle('hidden');
+        });
+
+        // Select avatar
+        function selectAvatar(avatarPath) {
+            selectedAvatar = avatarPath;
+            document.getElementById('avatar-display').src = avatarPath;
+
+            // Highlight selected avatar
+            document.querySelectorAll('.avatar-option').forEach(img => {
+                img.style.border = '2px solid #ddd';
+            });
+            event.target.style.border = '3px solid #007bff';
+
+            // Hide avatar selector after selection
+            setTimeout(() => {
+                document.getElementById('avatar-selector').classList.add('hidden');
+            }, 300);
+        }
+
+        // Load profile
+        function loadProfile() {
+            const profile = JSON.parse(localStorage.getItem('profile_' + currentUser) || '{}');
+            document.getElementById('full-name').value = profile.name || '';
+            document.getElementById('email').value = profile.email || '';
+            document.getElementById('dob').value = profile.dob || '';
+            document.getElementById('education').value = profile.education || '';
+            document.getElementById('phone').value = profile.phone || '';
+            document.getElementById('college').value = profile.college || '';
+            document.getElementById('address').value = profile.address || '';
+            document.getElementById('city').value = profile.city || '';
+
+            if (profile.avatar) {
+                selectedAvatar = profile.avatar;
+                document.getElementById('avatar-display').src = profile.avatar;
+            }
+        }
+
+        // Save profile
+        document.getElementById('profile-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const profile = {
+                name: document.getElementById('full-name').value,
+                email: document.getElementById('email').value,
+                dob: document.getElementById('dob').value,
+                education: document.getElementById('education').value,
+                phone: document.getElementById('phone').value,
+                college: document.getElementById('college').value,
+                address: document.getElementById('address').value,
+                city: document.getElementById('city').value,
+                avatar: selectedAvatar
+            };
+            localStorage.setItem('profile_' + currentUser, JSON.stringify(profile));
+            showSuccess('Your profile has been saved successfully!', 'Profile Saved!');
+        });
+    </script>
+</body>
+
+</html>

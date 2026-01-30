@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment - Techprolabz</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="assets/logo.jpg" alt="Techprolabz Logo">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="dashboard.html">Profile</a></li>
+                <li><a href="payment.html">Payment</a></li>
+                <li><a href="#" id="logout">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="robotics-overlay"></div>
+    <div class="particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <main>
+        <section id="payment">
+            <h2>Payment System</h2>
+            <p>Securely process your payments here.</p>
+            <form id="payment-form">
+                <div class="form-group">
+                    <label for="card-number">Card Number:</label>
+                    <input type="text" id="card-number" placeholder="1234 5678 9012 3456" required>
+                </div>
+                <div class="form-group">
+                    <label for="expiry">Expiry Date:</label>
+                    <input type="text" id="expiry" placeholder="MM/YY" required>
+                </div>
+                <div class="form-group">
+                    <label for="cvv">CVV:</label>
+                    <input type="text" id="cvv" placeholder="123" required>
+                </div>
+                <div class="form-group">
+                    <label for="amount">Amount:</label>
+                    <input type="number" id="amount" placeholder="100" required>
+                </div>
+                <button type="submit">💰 Pay Now</button>
+            </form>
+            <div id="payment-status"></div>
+            <div id="payment-history">
+                <h3>Payment History</h3>
+                <ul id="history-list"></ul>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const currentUser = localStorage.getItem('currentUser');
+        if (!currentUser) {
+            window.location.href = 'login.html';
+        }
+
+        // Logout
+        document.getElementById('logout').addEventListener('click', function() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'login.html';
+        });
+
+        // Payment
+        document.getElementById('payment-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const card = document.getElementById('card-number').value;
+            const expiry = document.getElementById('expiry').value;
+            const cvv = document.getElementById('cvv').value;
+            const amount = document.getElementById('amount').value;
+
+            // Simulate verification
+            if (card.length === 16 && expiry.match(/\d{2}\/\d{2}/) && cvv.length === 3 && amount > 0) {
+                document.getElementById('payment-status').innerHTML = '<p style="color: green;">Payment of $' + amount + ' verified successfully!</p>';
+                // Store payment history
+                const payments = JSON.parse(localStorage.getItem('payments_' + currentUser) || '[]');
+                payments.push({ amount, date: new Date().toISOString() });
+                localStorage.setItem('payments_' + currentUser, JSON.stringify(payments));
+                loadPaymentHistory();
+            } else {
+                document.getElementById('payment-status').innerHTML = '<p style="color: red;">Invalid payment details.</p>';
+            }
+        });
+
+        // Load payment history
+        function loadPaymentHistory() {
+            const list = document.getElementById('history-list');
+            list.innerHTML = '';
+            const payments = JSON.parse(localStorage.getItem('payments_' + currentUser) || '[]');
+            if (payments.length === 0) {
+                list.innerHTML = '<li>No payments yet.</li>';
+            } else {
+                payments.forEach(p => {
+                    const li = document.createElement('li');
+                    li.textContent = `$${p.amount} on ${new Date(p.date).toLocaleDateString()}`;
+                    list.appendChild(li);
+                });
+            }
+        }
+
+        loadPaymentHistory();
+    </script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: url("assets/background.jpg");
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+    color: white;
+}
+
+/* NAVBAR */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+}
+
+.logo {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 25px;
+}
+
+.signup-btn {
+    padding: 8px 18px;
+    background: #3a66ff;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+/* MAIN */
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 50px;
+}
+
+/* LEFT */
+.left {
+    width: 50%;
+}
+
+.robot {
+    width: 350px;
+}
+
+/* RIGHT */
+.right {
+    width: 40%;
+}
+
+.login-card {
+    background: rgba(0,0,0,0.4);
+    padding: 30px;
+    border-radius: 15px;
+}
+
+.login-card h3 {
+    margin: 15px 0 8px;
+    font-size: 14px;
+}
+
+.login-card input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+}
+
+.options {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    margin: 15px 0;
+}
+
+.options label {
+    white-space: nowrap;
+}
+
+.options a {
+    color: #9db4ff;
+    text-decoration: none;
+}
+
+.login-btn {
+    width: 100%;
+    padding: 12px;
+    background: #3a66ff;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/* WAVE */
+.wave {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
