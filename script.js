@@ -117,24 +117,76 @@ if (bookingForm) {
     });
 }
 
-// Load booking history
+// Load booking history with modern card design
 function loadHistory() {
     const currentUser = localStorage.getItem('currentUser');
     const list = document.getElementById('history-list');
+    const countElement = document.getElementById('booking-count');
+
     if (!list) return;
 
     list.innerHTML = '';
     const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
     const userBookings = bookings.filter(b => b.user === currentUser);
+
+    // Update booking count
+    if (countElement) {
+        countElement.textContent = `${userBookings.length} booking${userBookings.length !== 1 ? 's' : ''}`;
+    }
+
     if (userBookings.length === 0) {
-        list.innerHTML = '<li>No bookings yet.</li>';
+        list.innerHTML = `
+            <div class="empty-history">
+                <div class="empty-history-icon">📅</div>
+                <div class="empty-history-text">No bookings yet</div>
+                <p style="margin-top: 0.5rem; color: #95a5a6;">Start by booking your first equipment!</p>
+            </div>
+        `;
     } else {
+        // Sort bookings by date (newest first)
+        userBookings.sort((a, b) => new Date(b.date) - new Date(a.date));
+
         userBookings.forEach(b => {
-            const li = document.createElement('li');
             // Support both old (single time) and new (time range) format
             const timeDisplay = b.timeRange || b.time || `${b.startTime} - ${b.endTime}`;
-            li.textContent = `${b.equipment} on ${b.date} at ${timeDisplay}`;
-            list.appendChild(li);
+
+            // Get equipment icon
+            const equipmentIcons = {
+                '3D Printer': '🖨️',
+                'Robot Kits': '🤖',
+                'CNC Machine': '⚙️',
+                'Drones': '🚁'
+            };
+            const icon = equipmentIcons[b.equipment] || '🔧';
+
+            // Format date
+            const dateObj = new Date(b.date);
+            const formattedDate = dateObj.toLocaleDateString('en-US', {
+                weekday: 'short',
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+
+            const card = document.createElement('div');
+            card.className = 'history-card';
+            card.innerHTML = `
+                <div class="history-card-header">
+                    <span class="history-card-icon">${icon}</span>
+                    <span class="history-card-title">${b.equipment}</span>
+                </div>
+                <div class="history-card-details">
+                    <div class="history-detail">
+                        <span class="history-detail-icon">📅</span>
+                        <span>${formattedDate}</span>
+                    </div>
+                    <div class="history-detail">
+                        <span class="history-detail-icon">🕐</span>
+                        <span>${timeDisplay}</span>
+                    </div>
+                </div>
+            `;
+            list.appendChild(card);
         });
     }
 }

@@ -40,30 +40,78 @@
         </section>
 
         <section id="booking">
-            <h2>Book Equipment</h2>
-            <form id="booking-form">
-                <label for="equipment-select">Select Equipment:</label>
-                <select id="equipment-select" required>
-                    <option value="3D Printer">3D Printer</option>
-                    <option value="Robot Kits">Robot Kits</option>
-                    <option value="CNC Machine">CNC Machine</option>
-                    <option value="Drones">Drones</option>
-                </select>
-                <label for="date">Date:</label>
-                <input type="date" id="date" required>
-                <label for="start-time">Start Time:</label>
-                <input type="time" id="start-time" min="09:00" max="17:00" required>
-                <label for="end-time">End Time:</label>
-                <input type="time" id="end-time" min="09:00" max="17:00" required>
-                <button type="submit">Book Now</button>
-            </form>
+            <div class="booking-container">
+                <div class="booking-header">
+                    <h2>Book Equipment</h2>
+                    <p class="booking-subtitle">Reserve your equipment for the perfect time slot</p>
+                </div>
+
+                <form id="booking-form" class="modern-booking-form">
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label for="equipment-select">
+                                <i class="icon">🔧</i>
+                                Select Equipment
+                            </label>
+                            <select id="equipment-select" required>
+                                <option value="">Choose equipment...</option>
+                                <option value="3D Printer">🖨️ 3D Printer</option>
+                                <option value="Robot Kits">🤖 Robot Kits</option>
+                                <option value="CNC Machine">⚙️ CNC Machine</option>
+                                <option value="Drones">🚁 Drones</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="date">
+                                <i class="icon">📅</i>
+                                Date
+                            </label>
+                            <input type="date" id="date" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="start-time">
+                                <i class="icon">🕐</i>
+                                Start Time
+                            </label>
+                            <input type="time" id="start-time" min="09:00" max="17:00" required>
+                            <span class="helper-text">9:00 AM - 5:00 PM</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="end-time">
+                                <i class="icon">🕔</i>
+                                End Time
+                            </label>
+                            <input type="time" id="end-time" min="09:00" max="17:00" required>
+                            <span class="helper-text">9:00 AM - 5:00 PM</span>
+                        </div>
+                    </div>
+
+                    <div id="availability-status" class="availability-status hidden">
+                        <span class="status-icon">✓</span>
+                        <span class="status-text">Available</span>
+                    </div>
+
+                    <button type="submit" class="book-now-btn">
+                        <span class="btn-text">Book Now</span>
+                        <span class="btn-icon">→</span>
+                    </button>
+                </form>
+            </div>
         </section>
 
         <section id="history">
-            <h2>Booking History</h2>
-            <ul id="history-list">
-                <!-- History will be populated by JS -->
-            </ul>
+            <div class="history-container">
+                <div class="history-header">
+                    <h2>Your Bookings</h2>
+                    <span class="booking-count" id="booking-count">0 bookings</span>
+                </div>
+                <div id="history-list" class="history-grid">
+                    <!-- History will be populated by JS -->
+                </div>
+            </div>
         </section>
     </main>
 
@@ -110,6 +158,79 @@
             loadHistory();
             this.reset();
         });
+
+        // Pre-select equipment from URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const equipmentParam = urlParams.get('equipment');
+        if (equipmentParam) {
+            const equipmentSelect = document.getElementById('equipment-select');
+            // Try to find and select the matching option
+            for (let option of equipmentSelect.options) {
+                if (option.value === equipmentParam) {
+                    option.selected = true;
+                    break;
+                }
+            }
+        }
+
+        // Real-time availability checking
+        function checkAvailability() {
+            const equip = document.getElementById('equipment-select').value;
+            const date = document.getElementById('date').value;
+            const startTime = document.getElementById('start-time').value;
+            const endTime = document.getElementById('end-time').value;
+            const statusDiv = document.getElementById('availability-status');
+
+            // Only check if all fields are filled
+            if (!equip || !date || !startTime || !endTime) {
+                statusDiv.classList.add('hidden');
+                return;
+            }
+
+            // Validate time range
+            if (startTime >= endTime) {
+                statusDiv.classList.remove('hidden', 'available');
+                statusDiv.classList.add('unavailable');
+                statusDiv.innerHTML = '<span class="status-icon">⚠️</span><span class="status-text">End time must be after start time</span>';
+                return;
+            }
+
+            // Convert time strings to minutes
+            const timeToMinutes = (time) => {
+                const [hours, minutes] = time.split(':').map(Number);
+                return hours * 60 + minutes;
+            };
+
+            const newStart = timeToMinutes(startTime);
+            const newEnd = timeToMinutes(endTime);
+
+            // Check for conflicts
+            const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+            const conflict = bookings.find(b => {
+                if (b.equipment === equip && b.date === date) {
+                    const existingStart = timeToMinutes(b.startTime);
+                    const existingEnd = timeToMinutes(b.endTime);
+                    return (newStart < existingEnd && newEnd > existingStart);
+                }
+                return false;
+            });
+
+            if (conflict) {
+                statusDiv.classList.remove('hidden', 'available');
+                statusDiv.classList.add('unavailable');
+                statusDiv.innerHTML = `<span class="status-icon">❌</span><span class="status-text">Unavailable - Already booked ${conflict.startTime} - ${conflict.endTime}</span>`;
+            } else {
+                statusDiv.classList.remove('hidden', 'unavailable');
+                statusDiv.classList.add('available');
+                statusDiv.innerHTML = '<span class="status-icon">✓</span><span class="status-text">Available - Ready to book!</span>';
+            }
+        }
+
+        // Add event listeners for real-time checking
+        document.getElementById('equipment-select').addEventListener('change', checkAvailability);
+        document.getElementById('date').addEventListener('change', checkAvailability);
+        document.getElementById('start-time').addEventListener('change', checkAvailability);
+        document.getElementById('end-time').addEventListener('change', checkAvailability);
     </script>
 </body>
 
